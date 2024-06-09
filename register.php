@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     body {
-      background-color: #0e0d0d;
+      background-color: #000;
       color: #fff;
       font-family: Arial, sans-serif;
     }
@@ -31,12 +31,6 @@
       background-color: #282c37;
       color: #fff;
     }
-    .form-check-input:checked {
-      background-color: #dc3545 !important;
-    }
-    .form-check-label {
-      color: #dc3545;
-    }
     .btn-primary {
       background-color: #dc3545;
       border: none;
@@ -51,28 +45,25 @@
 <body>
   <div class="container">
     <div class="register-container">
-      <h2 class="text-center mb-4" style="color: #dc3545;">Welcome! Register to Join With Us!</h2>
-      <form>
+      <h2 class="text-center mb-4" style="color: #dc3545;">Create an Account</h2>
+      <form action="register_process.php" method="post">
         <div class="form-group">
-          <input type="text" class="form-control" id="name" placeholder="Name">
+          <input type="text" class="form-control" name="username" placeholder="Username" required>
         </div>
         <div class="form-group">
-          <input type="email" class="form-control" id="email" placeholder="Email">
+          <input type="email" class="form-control" name="email" placeholder="Email" required>
         </div>
         <div class="form-group">
-          <input type="tel" class="form-control" id="phone" placeholder="Phone Number">
-        </div>
-        <div class="form-group">
-          <input type="password" class="form-control" id="password" placeholder="Password">
-        </div>
-        <div class="form-check mb-3">
-          <input type="checkbox" class="form-check-input" id="agree">
-          <label class="form-check-label" for="agree">I agree to the terms and conditions.</label>
+          <input type="password" class="form-control" name="password" placeholder="Password" required>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Register</button>
       </form>
-      <p class="text-center mt-3">Already have an account? <a href="#" style="color: #dc3545;">Login here</a>.</p>
+      <p class="text-center mt-3">Already have an account? <a href="login.php" style="color: #dc3545;">Login here</a>.</p>
     </div>
   </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

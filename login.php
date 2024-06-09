@@ -42,21 +42,26 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="login-container">
       <h2 class="text-center mb-4" style="color: #dc3545;">Welcome back!</h2>
-      <form>
+      <form action="login_process.php" method="POST">
         <div class="form-group">
-          <input type="email" class="form-control" id="email" placeholder="Email">
+          <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
         </div>
         <div class="form-group">
-          <input type="password" class="form-control" id="password" placeholder="Password">
+          <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Login</button>
       </form>
-      <p class="text-center mt-3">Don't have an account yet? <a href="#" style="color: #dc3545;">Register here</a>.</p>
+      <p class="text-center mt-3">Don't have an account yet? <a href="register.php" style="color: #dc3545;">Register here</a>.</p>
     </div>
   </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

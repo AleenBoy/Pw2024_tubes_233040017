@@ -101,4 +101,25 @@ function searchProducts($query) {
 
     return $results;
 }
+
+// function keyword buat ajaxxx
+function cari($keyword){
+    $conn = koneksi();
+    $query = "SELECT * FROM product
+               WHERE 
+               nama LIKE '%$keyword%' OR
+               deskripsi LIKE '%$keyword%' OR
+               gambar LIKE '%$keyword%' OR
+               view_more LIKE '%$keyword%'";
+
+    $result = mysqli_query($conn, $query);
+
+    $rows = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $rows[] = $row;
+    }
+
+    return $rows;
+
+}
 ?>

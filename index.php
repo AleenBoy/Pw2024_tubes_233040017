@@ -12,16 +12,22 @@ $search = "";
 
 // cek kalo searchnya udah ke submit
 if (isset($_GET['search'])) {
-    $search = $_GET['search'];
+  $search = $_GET['search'];
 }
 
 // ambil data dari database pake filter search
 $sql = "SELECT * FROM product";
 if (!empty($search)) {
-    $sql .= " WHERE nama LIKE '%$search%' OR deskripsi LIKE '%$search%'";
+  $sql .= " WHERE nama LIKE '%$search%' OR deskripsi LIKE '%$search%'";
 }
 
-$product = query($sql);
+$product = [];
+if (isset($_GET['keyword'])) {
+  $keyword = $_GET['keyword'];
+  $product = cari($keyword);
+} else {
+  $product = query($sql);
+}
 ?>
 
 
@@ -38,11 +44,12 @@ $product = query($sql);
 </head>
 
 <body>
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg fixed-top">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg fixed-top">
     <div class="container-fluid">
       <a class="navbar-brand" href="#"><img src="img/sporta logo.png" width="50" height="50"></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -188,100 +195,137 @@ $product = query($sql);
     </div>
   </div>
 
-<!-- Available Supplement -->
-<div id="Product" class="container-fluid pt-5 pb-5 bg-light">
-  <div class="container text-center">
-    <h2 class="display-4" id="available-supplement">Available Supplement</h2>
-    <h2 class="display-6">Find the right supplement for you!</h2>
+  <!-- Available Supplement -->
+  <div id="Product" class="container-fluid pt-5 pb-5 bg-light">
+    <div class="container text-center">
+      <h2 class="display-4">Available Supplement</h2>
 
-    <!-- Invisible Iframe -->
-<iframe name="invisibleFrame" style="display:none;"></iframe>
+      <!-- Invisible Iframe -->
+      <iframe name="invisibleFrame" style="display:none;"></iframe>
 
-    <!-- Search Bar -->
-<div class="row justify-content-center pt-4 mb-3">
-    <div class="col-md-8">
-        <form class="d-flex" role="search" method="GET" action="">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search" value="<?php echo htmlspecialchars($search); ?>">
-            <button class="btn btn-danger" type="submit" href="#Product">Search</button>
-        </form>
-    </div>
-</div>
+      <!-- Search Bar -->
+      <div class="row justify-content-center pt-4 mb-3">
+        <div class="col-md-8">
+          <form class="d-flex" id="searchForm" role="search">
+            <input class="form-control me-2" type="text" id="searchInput" placeholder="Search..." aria-label="Search"
+              name="search" value="<?php echo htmlspecialchars($search); ?>">
+            <button class="btn btn-outline-danger" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
 
-<!-- Cards Untuk Product -->
-<div class="row">
-    <?php
-    // check kalo ada product products6
-    if (count($product) > 0) {
-        // output data untuk tiap product
-        foreach ($product as $row) {
+      <!-- Cards Untuk Product -->
+      <div class="row" id="result">
+        <?php
+        // check kalo ada product products
+        if (count($product) > 0) {
+          // output data untuk tiap product
+          foreach ($product as $row) {
             echo '<div class="col-md-4 mb-4">';
             echo '<div class="card">';
-            echo '<img src="uploads/' . $row["gambar"] . '" class="card-img-top" alt="Product Image" style="max-width: 400px; max-height: 350px;">';
+            echo '<img src="uploads/' . htmlspecialchars($row["gambar"]) . '" class="card-img-top" alt="Product Image" style="max-width: 400px; max-height: 350px;">';
             echo '<div class="card-body">';
-            echo '<h5 class="card-title">' . $row["nama"] . '</h5>';
-            echo '<p class="card-text">' . $row["deskripsi"] . '</p>';
-            echo '<a href="' . $row["view_more"] . '" class="btn btn-outline-danger">View More</a>';
+            echo '<h5 class="card-title">' . htmlspecialchars($row["nama"]) . '</h5>';
+            echo '<p class="card-text">' . htmlspecialchars($row["deskripsi"]) . '</p>';
+            echo '<a href="' . htmlspecialchars($row["view_more"]) . '" class="btn btn-outline-danger">View More</a>';
             echo '</div>';
             echo '</div>';
             echo '</div>';
+          }
+        } else {
+          echo '<p class="text-center">No products found.</p>';
         }
-    } else {
-        echo '<p class="text-center">No products found.</p>';
-    }
-    ?>
-</div>
-
-
-<!-- location & Join-->
-<section id="location" class="bg-location">
-  <div class="container-fluid" id="join">
-    <div class="top-heading">
-      <div class="row">
-        <p class="pt-3 fs-4 text-secondary mb-0 text-center gorm-heading1">Location</p>
-        <p class="pt-1 fs-2 pb fw-bold text-center form-heading2" href="#join">Join With Us Now!</p>
+        ?>
       </div>
-    </div>
 
-    <div class="row justify-content-center mt-2">
-      <iframe
-        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15940.991563200123!2d107.6334533!3d-2.7427173!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e1717cf5e41c1c7%3A0xc743fe3198a5daa2!2sSportaGYM!5e0!3m2!1sen!2sid!4v1703919902831!5m2!1sen!2sid"
-        width="600" height="450" style="border:0;" class="mx-auto d-block"></iframe>
-    </div>
 
-    <div class="row justify-content-center mt-4">
-      <div class="col-12 col-md-8">
-        <div class="d-flex justify-content-center">
-          <div class="d-flex align-items-center me-5">
-            <div class="text-center me-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
-              </svg>
-            </div>
-            <div class="text-start">
-              <p class="fs-5 pb-0 mb-0">Location</p>
-              <p class="subtext text-nowrap">Jl. K. Yos Sudarso No.18, Tj. Pandan, Belitung, Bangka Belitung 33411</p>
+      <!-- location & Join-->
+      <section id="location" class="bg-location">
+        <div class="container-fluid" id="join">
+          <div class="top-heading">
+            <div class="row">
+              <p class="pt-3 fs-4 text-secondary mb-0 text-center gorm-heading1">Location</p>
+              <p class="pt-1 fs-2 pb fw-bold text-center form-heading2" href="#join">Join With Us Now!</p>
             </div>
           </div>
-          <div class="d-flex align-items-center">
-            <div class="text-center me-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
-              </svg>
-            </div>
-            <div class="text-start">
-              <p class="fs-5 pb-0 mb-0">Phone</p>
-              <p class="subtext text-nowrap">0877-6613-5523</p>
+
+          <div class="row justify-content-center mt-2">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15940.991563200123!2d107.6334533!3d-2.7427173!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e1717cf5e41c1c7%3A0xc743fe3198a5daa2!2sSportaGYM!5e0!3m2!1sen!2sid!4v1703919902831!5m2!1sen!2sid"
+              width="600" height="450" style="border:0;" class="mx-auto d-block"></iframe>
+          </div>
+
+          <div class="row justify-content-center mt-4">
+            <div class="col-12 col-md-8">
+              <div class="d-flex justify-content-center">
+                <div class="d-flex align-items-center me-5">
+                  <div class="text-center me-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                      class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                      <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
+                    </svg>
+                  </div>
+                  <div class="text-start">
+                    <p class="fs-5 pb-0 mb-0">Location</p>
+                    <p class="subtext text-nowrap">Jl. K. Yos Sudarso No.18, Tj. Pandan, Belitung, Bangka Belitung 33411
+                    </p>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="text-center me-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                      class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd"
+                        d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                    </svg>
+                  </div>
+                  <div class="text-start">
+                    <p class="fs-5 pb-0 mb-0">Phone</p>
+                    <p class="subtext text-nowrap">0877-6613-5523</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-    crossorigin="anonymous"></script>
+      <!-- AJAX -->
+      <script>
+        // Update event listener nya buat pake id input yang bener
+        document.getElementById("searchInput").addEventListener("input", function () {
+          var keyword = this.value.trim();
+          sendAjaxRequest(keyword);
+        });
+
+        // Update event listener nya juga buat pake id form sama input yang bener
+        document.getElementById("searchForm").addEventListener("submit", function (event) {
+          event.preventDefault();
+          var keyword = document.getElementById("searchInput").value.trim();
+          sendAjaxRequest(keyword);
+        });
+
+        //  buat kirim permintaan ajax
+        function sendAjaxRequest(keyword) {
+          var xhr = new XMLHttpRequest();
+          var url = "Ajax/ajax.php?keyword=" + keyword; 
+          xhr.open("GET", url, true);
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+              document.getElementById("result").innerHTML = xhr.responseText;
+            }
+          };
+          xhr.send();
+        }
+      </script>
+
+
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 <?php
-require '../functions.php';
+require '../Functions/functions.php';
 
 $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
 

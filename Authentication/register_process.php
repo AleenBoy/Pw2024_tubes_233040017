@@ -1,31 +1,33 @@
 <?php
-include 'functions.php';
+require '../Functions/functions.php';
 
-// check udah ke submit apa blom
+// cek udah disubmit apa belom formnya
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // ambil dari data
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // hash password (nyembunyiin)
+
+    if(isset($_POST['role'])) {
+        $role_id = $_POST['role'];
+    } else {
+        // klo ngga ada, asumsiin aja jadi 'user'
+        $role_id = 2; // misalnya, anggap role defaultnya 'user'
+    }
+
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    // set default untuk role
-    $role = 'user';
+    // masukin data user ke database, pake role yang dipilih tadi
 
-    // masukin datauser ke database dengan default role
     $conn = koneksi();
-    $query = "INSERT INTO users (username, email, password, role) VALUES ('$username', '$email', '$hashed_password', '$role')";
+    $query = "INSERT INTO users (username, email, password, id_role) VALUES ('$username', '$email', '$hashed_password', '$role_id')";
     if (mysqli_query($conn, $query)) {
-        // registrasi sukses, redirect klogin page
         header("Location: login.php");
         exit();
     } else {
-        // kalo eror 
+
         echo "Error: " . $query . "<br>" . mysqli_error($conn);
     }
-
 
     mysqli_close($conn);
 } else {

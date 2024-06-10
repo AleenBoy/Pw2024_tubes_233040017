@@ -1,10 +1,12 @@
 <?php
-require 'functions.php';
-// session_start();
-// if (!isset($_SESSION['user'])) {
-//     header('Location: login.php');
-//     exit();
-// }
+require 'Functions/functions.php';
+
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: Authentication/login.php');
+    exit();
+}
 
 $product = query("SELECT nama, deskripsi, gambar, view_more FROM product");
 
@@ -70,7 +72,7 @@ if (isset($_GET['keyword'])) {
             <a class="nav-link" href="#location">Location</a>
           </li>
         </ul>
-        <a href="logout.php" class="btn btn-outline-light">Logout</a>
+        <a href="Authentication/logout.php" class="btn btn-outline-light">Logout</a>
       </div>
     </div>
   </nav>
@@ -214,10 +216,9 @@ if (isset($_GET['keyword'])) {
         </div>
       </div>
 
-      <!-- Cards Untuk Product -->
+      <!-- cards Untuk Product -->
       <div class="row" id="result">
         <?php
-        // check kalo ada product products
         if (count($product) > 0) {
           // output data untuk tiap product
           foreach ($product as $row) {
@@ -292,13 +293,13 @@ if (isset($_GET['keyword'])) {
 
       <!-- AJAX -->
       <script>
-        // Update event listener nya buat pake id input yang bener
+        // update event listener nya buat pake id input yang bener
         document.getElementById("searchInput").addEventListener("input", function () {
           var keyword = this.value.trim();
           sendAjaxRequest(keyword);
         });
 
-        // Update event listener nya juga buat pake id form sama input yang bener
+        // update event listener nya juga buat pake id form sama input yang bener
         document.getElementById("searchForm").addEventListener("submit", function (event) {
           event.preventDefault();
           var keyword = document.getElementById("searchInput").value.trim();

@@ -1,25 +1,39 @@
 <?php
-require 'functions.php';
+require '../Functions/functions.php';
 
-// ambil data produk dari ID
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    echo "<script>
+            alert('ID Not Valid.');
+            document.location.href = 'dashboard.php';
+          </script>";
+    exit;
+}
+
 $id = $_GET['id'];
-$pdc = query("SELECT * FROM product WHERE id = $id")[0];
+$pdc = query("SELECT * FROM product WHERE id = $id");
 
-// kalo tombol ubah di klik
+if (!$pdc) {
+    echo "<script>
+            alert('Product Not Found.');
+            document.location.href = 'dashboard.php';
+          </script>";
+    exit;
+}
+
+$pdc = $pdc[0];
+
 if (isset($_POST['ubah'])) {
-    // tambahkan data gambar lama ke dalam array $_POST
     $_POST['gambar_lama'] = $pdc['gambar'];
 
-    //  data berhasil diubah
     if (ubah($_POST) > 0) {
         echo "<script>
-                alert('data berhasil diubah');
+                alert('Succesfully Updated data');
                 document.location.href = 'dashboard.php';
               </script>";
     } else {
         echo "<script>
-                alert('data gagal diubah');
-                document.location.href = 'dashboard.php';
+                alert('Failed to Update Data');
+                document.location.href = 'ubah.php';
               </script>";
     }
 }
@@ -40,7 +54,7 @@ if (isset($_POST['ubah'])) {
     <div class="container col-8">
     <H1>Product Edit Form</H1>
 
-    <form action="" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<?= $pdc['id']; ?>">
         <div class="mb-3">
     <label for="nama" class="form-label">Name</label>

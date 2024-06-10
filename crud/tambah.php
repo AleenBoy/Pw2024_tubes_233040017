@@ -1,5 +1,5 @@
 <?php
-require 'functions.php';
+require '../Functions/functions.php';
 
 // insert gambar
 if (isset($_POST['submit'])) {
@@ -16,11 +16,9 @@ if (isset($_POST['submit'])) {
 
 // kalo tombol tambah di klik
 if (isset($_POST['tambah'])) {
-    // Tambahkan data gambar ke dalam array $_POST
     $_POST['gambar'] = $_FILES['gambar']['name'];
-    move_uploaded_file($_FILES['gambar']['tmp_name'], 'uploads/' . $_POST['gambar']);
+    move_uploaded_file($_FILES['gambar']['tmp_name'], '../uploads/' . $_POST['gambar']);
     
-    // data berhasil ditambahin
     if (tambah($_POST) > 0) {
         echo "<script>
                 alert('Data berhasil ditambahkan');
